@@ -1,0 +1,11 @@
+extends ../_base/base.pug
+
+block head
+  include ../_components/head.pug
+
+block layout
+  .app
+    include ../_components/header.pug
+    .container
+      block content
+    include ../_components/footer.pug

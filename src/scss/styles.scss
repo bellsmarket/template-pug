@@ -1,0 +1,15 @@
+// Import base styles
+@import "_base/variables";
+@import "_base/mixins";
+@import "_base/placeholders";
+@import "_base/global";
+
+// Import components styles
+@import "_components/components";
+
+// Import layouts styles
+@import "_layouts/header";
+@import "_layouts/footer";
+
+// Import pages styles
+@import "pages/index";
