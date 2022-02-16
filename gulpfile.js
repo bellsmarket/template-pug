@@ -10,22 +10,25 @@ var gulp    = require('gulp'),
   changed       = require('gulp-changed'),
   cached       = require('gulp-cached'),
   autoprefixer = require('gulp-autoprefixer');
+  debug = require('gulp-debug');
+
 var path = require('path');
 
 
 // PATH
-const PATH = {
+const FILEPATH = {
   dest: {
-    html: './dest/',
+    html: './dest',
     css: './dest/assets/css',
-    js: './dest/assets/js/*',
+    js: './dest/assets/js',
     img: './dest/assets/img',
     font: './dest/assets/font',
   },
+
   src: {
-    pug: './src/pug',
+    pug: './src/pug/pages/**/*.pug',
     scss: './src/scss/**/*.scss',
-    js: './src/js',
+    js: './src/js/*.js',
     img: './src/img',
     font: './src/font',
   }
@@ -35,7 +38,7 @@ const PATH = {
 function showPathObj(obj) {
   for (let i in obj) {
     for (let j  in obj[i]) {
-      console.log(PATH[i][j]);
+      console.log(FILEPATH[i][j]);
     }
   }
   return false;
@@ -52,7 +55,7 @@ function reload(done) {
 
 const styles = () => {
   return (
-    gulp.src(PATH.src.scss)
+    gulp.src(FILEPATH.src.scss)
     .pipe(sourcemaps.init())
     .pipe(plumber({
       errorHandler: notify.onError({
@@ -66,11 +69,11 @@ const styles = () => {
       cascade: false
     }))
     .pipe(sass({outputStyle: 'expanded'}))
-    .pipe(gulp.dest(PATH.dest.css))
+    .pipe(gulp.dest(FILEPATH.dest.css))
     .pipe(sass({outputStyle: 'compressed'}))
     .pipe(sourcemaps.write('./'))
     .pipe(rename('styles.min.css'))
-    .pipe(gulp.dest(PATH.dest.css))
+    .pipe(gulp.dest(FILEPATH.dest.css))
     .pipe(connect.reload())
     .pipe(notify('Compile'))
   );
@@ -95,51 +98,57 @@ const styles = () => {
 
 
 // Wip
-function scripts() {
+const scripts = () => {
   return (
-    gulp.src('src/js/scripts.js')
+    gulp.src(FILEPATH.src.js)
     .pipe(plumber())
-    .pipe(gulp.dest('dest/assets/js'))
+    .pipe(gulp.dest(FILEPATH.dest.js))
     .pipe(uglify())
-    .pipe(rename('scripts.min.js'))
-    .pipe(gulp.dest('dest/assets/js'))
+    .pipe(rename({
+      suffix: '.min'
+    }))
+    .pipe(gulp.dest(FILEPATH.dest.js))
     .pipe(connect.reload())
   );
-}
+};
 
 
 // Wip
-function html() {
+const html = () => {
   return (
     gulp.src('./dest/*.html')
     .pipe(plumber())
     .pipe(connect.reload())
   );
-}
+};
 
 
 // Wip
 // Pug => html Compile
-function views() {
+const views = () => {
   return (
-    gulp.src('src/pug/pages/**/*.pug')
+    gulp.src(FILEPATH.src.pug)
+    .pipe(debug())
     .pipe(plumber())
     .pipe(pug({
       pretty: true
     }))
-    .pipe(gulp.dest('./dest'))
+    .pipe(gulp.dest(FILEPATH.dest.html))
     .pipe(connect.reload())
   );
-}
+};
 
 
 // Wip
 // gulp.watch(ファイル, 処理)
 function watchTask(done) {
   gulp.watch('*.html', html);
-  gulp.watch('src/scss/**/*.scss', styles);
-  gulp.watch('src/js/scripts.js', scripts);
-  gulp.watch('src/pug/pages/**/*.pug', views);
+  gulp.watch(FILEPATH.src.scss, styles);
+  gulp.watch(FILEPATH.src.js, scripts);
+  gulp.watch(FILEPATH.src.pug, views);
+  // target_pug.on('change', function(e, stats) {
+  //   views(e);
+  // });
   done();
 }
 
@@ -163,7 +172,7 @@ const main = () => {
 
   styles();
 
-  showPathObj(PATH);
+  showPathObj(FILEPATH);
   return true;
 };
 
