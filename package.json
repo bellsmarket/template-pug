@@ -1,26 +1,35 @@
 {
-  "name": "pug-sass-starter",
+  "name": "template-pug",
   "version": "1.0.0",
-  "description": "A simple starter for building HTML templates with Pug and Sass.",
+  "description": "A simple starter for building HTML templates using Pug and Sass.",
   "main": "gulpfile.js",
   "scripts": {
-    "start": "gulp",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Sulis Triyono",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bellsmarket/template-pug.git"
+  },
+  "keywords": [],
+  "author": "",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/bellsmarket/template-pug/issues"
+  },
+  "homepage": "https://github.com/bellsmarket/template-pug#readme",
   "devDependencies": {
     "gulp": "^4.0.2",
     "gulp-autoprefixer": "^8.0.0",
+    "gulp-cached": "^1.1.1",
+    "gulp-changed": "^4.0.3",
     "gulp-connect": "^5.7.0",
+    "gulp-notify": "^4.0.0",
     "gulp-plumber": "^1.2.1",
     "gulp-pug": "^5.0.0",
     "gulp-rename": "^2.0.0",
-    "gulp-sass": "^5.0.0",
+    "gulp-sass": "^5.1.0",
+    "gulp-sourcemaps": "^3.0.0",
     "gulp-uglify": "^3.0.2",
-    "sass": "^1.42.1"
-  },
-  "dependencies": {
-    "ejs": "^3.1.6"
+    "sass": "^1.49.7"
   }
 }
