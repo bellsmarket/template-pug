@@ -1,4 +1,4 @@
-var gulp    = require('gulp'),
+const gulp    = require('gulp'),
   sass    = require('gulp-sass')(require('sass')),
   plumber = require('gulp-plumber'),
   connect = require('gulp-connect'),
@@ -9,14 +9,20 @@ var gulp    = require('gulp'),
   sourcemaps    = require('gulp-sourcemaps'),
   changed       = require('gulp-changed'),
   cached       = require('gulp-cached'),
-  autoprefixer = require('gulp-autoprefixer');
-  debug = require('gulp-debug');
+  autoprefixer = require('gulp-autoprefixer'),
+  debug = require('gulp-debug'),
+  data  = require('gulp-data');
 
-var path = require('path');
+const path = require('path'),
+      fs = require('fs');
+
 
 
 // PATH
 const FILEPATH = {
+  data: {
+    json: './src/data/site.json'
+  },
   dest: {
     html: './dest',
     css: './dest/assets/css',
@@ -33,7 +39,6 @@ const FILEPATH = {
     font: './src/font',
   }
 };
-
 
 function showPathObj(obj) {
   for (let i in obj) {
@@ -53,6 +58,8 @@ function reload(done) {
   done();
 }
 
+
+//scss Compile
 const styles = () => {
   return (
     gulp.src(FILEPATH.src.scss)
@@ -80,28 +87,13 @@ const styles = () => {
 };
 
 
-// function compileAllSass(done) {
-//   return gulp.src('./app/**/*.scss')
-//     .pipe(sourcemaps.init())
-//     .pipe(plumber({
-//       errorHandler: notify.onError({
-//         title: 'scss Compile Failed', // 任意のタイトルを表示させる
-//         message: '<%= error.message %>' // エラー内容を表示させる
-//       })
-//     }))
-//     .pipe(sass())
-//     .pipe(sourcemaps.write('./'))
-//     .pipe(gulp.dest('./app/'))
-//     .pipe(notify('Compile'));
-//   done();
-// }
-
 
 // Wip
+// JS Compile
 const scripts = () => {
   return (
     gulp.src(FILEPATH.src.js)
-    .pipe(plumber())
+    // .pipe(plumber())
     .pipe(gulp.dest(FILEPATH.dest.js))
     .pipe(uglify())
     .pipe(rename({
@@ -123,37 +115,81 @@ const html = () => {
 };
 
 
-// Wip
-// Pug => html Compile
+// All Pug Files => html Compile
 const views = () => {
+  const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
+
   return (
-    gulp.src(FILEPATH.src.pug)
-    .pipe(debug())
-    .pipe(plumber())
+    gulp.src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
+    .pipe(debug({
+      title: 'PugCompile =>'
+    }))
+    .pipe(changed(FILEPATH.dest.html))
+    // .pipe(plumber())
     .pipe(pug({
+      locals: jsonData,
       pretty: true
     }))
     .pipe(gulp.dest(FILEPATH.dest.html))
-    .pipe(connect.reload())
+    // .pipe(connect.reload())
   );
 };
 
 
-// Wip
-// gulp.watch(ファイル, 処理)
+
+// 更新があったファイルのみをコンパイル
+// Pug => html
+const singleviews = (file) => {
+  const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
+
+  let expectPATH = 'src/pug/pages/'
+
+  let targetFILE = file.replace(expectPATH, '');
+  let destPATH = path.dirname(FILEPATH.dest.html + '/' + targetFILE);
+
+  return (
+    gulp.src(file)
+    .pipe(debug({
+      title: 'PugCompile =>',
+      showCount: false
+    }))
+    .pipe(plumber({
+      errorHandler: notify.onError({
+        title: 'Pug Compile Failed', // Any message
+        message: '<%= error.message %>' // show Error message
+      })
+    }))
+    .pipe(pug({
+      locals: jsonData,
+      pretty: true
+    }))
+    .pipe(gulp.dest(destPATH))
+  )
+};
+
+
+const debugPATH = () => {
+  console.log('targetFILE => ' + targetFILE);
+  console.log('destPATH => ' + destPATH);
+}
+
+
+// gulp.watch(TargetFILE, Function)
 function watchTask(done) {
   gulp.watch('*.html', html);
   gulp.watch(FILEPATH.src.scss, styles);
   gulp.watch(FILEPATH.src.js, scripts);
-  gulp.watch(FILEPATH.src.pug, views);
-  // target_pug.on('change', function(e, stats) {
-  //   views(e);
-  // });
+
+  var singlePUG = gulp.watch(FILEPATH.src.pug);
+  singlePUG.on('change', (e, stats) => {
+    singleviews(e);
+  });
   done();
 }
 
 
-const watch = gulp.parallel(watchTask, reload);
+const watch = gulp.parallel(watchTask);
+// const watch = gulp.parallel(watchTask, reload);
 const build = gulp.series(gulp.parallel(styles, scripts, html, views));
 
 exports.reload = reload;
@@ -170,10 +206,8 @@ exports.default = watch;
 const main = () => {
   console.log('call is main');
 
-  styles();
-
-  showPathObj(FILEPATH);
+  // showPathObj(FILEPATH);
   return true;
 };
 
-main();
+// main();
