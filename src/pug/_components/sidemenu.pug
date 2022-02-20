@@ -1,0 +1,11 @@
+// ========== SideMenu START ==========
+div.l-side
+  h2 SideMenu
+  nav.sidemenu-nav
+    ul.sidemenu-nav__list
+      each k, v in pages
+        if pageID == v
+          li.sidemenu-nav__item.current #{v}
+        else
+          li.sidemenu-nav__item: a.sidemenu-nav__link(href=`/${k.path}`) #{v}
+// ========== SideMenu END ==========

@@ -1,11 +1,12 @@
 // ========== Header START ==========
-header.border
+header.l-header.js-header
   div.container
     h2 ヘッダー
-    ul
-      each k, v in pages
-        if pageID == v
-          li.current #{v}
-        else
-          li: a(href=`/${k.path}`) #{v}
+    nav.header-nav
+      ul.header-nav__list
+        each k, v in pages
+          if pageID == v
+            li.header-nav__item.current #{v}
+          else
+            li.header-nav__item: a.header-nav__link(href=`/${k.path}`) #{v}
 // ==========  Header END ==========
