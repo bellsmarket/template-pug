@@ -1,7 +1,9 @@
+pugPATH:=./src/pug/pages
+
 default:
 	vim gulpfile.js
 build:
-	gulp build&
+	gulp build
 
 watch:
 	gulp watch&
@@ -9,3 +11,5 @@ watch:
 make diff:
 	diff -rq  ./src/pug/pages ./dest |sort|rg -v '\.html' |rg -v '\.pug'
 
+make check:
+	echo ${pugPATH}
