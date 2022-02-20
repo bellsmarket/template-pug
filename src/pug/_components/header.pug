@@ -1,9 +1,11 @@
-header
+// ========== Header START ==========
+header.border
   div.container
-    p ヘッダー
+    h2 ヘッダー
     ul
-      li test01
-      li test02
-      li test03
-      li test04	
-      
+      each k, v in pages
+        if pageID == v
+          li.current #{v}
+        else
+          li: a(href=`/${k.path}`) #{v}
+// ==========  Header END ==========

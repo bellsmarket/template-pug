@@ -1,11 +1,31 @@
-extends ../_base/base.pug
+//- Global Variables
+- let debugFlag = 0 
+- let siteName = json.siteInfo.name
+- let siteURL = json.siteInfo.url
+- let pages = json.pages
+- let lang = json.siteInfo.lang
 
-block head
-  include ../_components/head.pug
+//- Variables from Each Page.
+block variables
 
-block layout
-  .app
-    include ../_components/header.pug
-    .container
+//- tempalate
+doctype html
+html(lang=lang)
+  head
+    include ../_components/head
+
+  body(id=pageID)
+    if debugFlag == 1
+      include ../_components/debug
+    include ../_components/header
+    
+    main.border.border-primary
+      for k, v in json.pages
+        if v == pageID
+          h2 This Page is => 
+            span.text-danger '#{v}'
+
       block content
-    include ../_components/footer.pug
+
+    include ../_components/footer
+    include ../_components/script

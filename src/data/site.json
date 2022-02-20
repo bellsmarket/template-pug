@@ -1,0 +1,40 @@
+{
+  "json": {
+    "siteInfo": {
+      "name": "template-ejs",
+      "url": "localhost",
+      "lang": "ja",
+      "debug": 1
+    },
+    "pages": {
+      "home": {
+        "id": 1,
+        "title": "Home",
+        "path": "",
+        "description": "This pages is Home.",
+        "keyword": "Home ホーム トップページ"
+      },
+      "cat": {
+        "id": 2,
+        "title": "Cat",
+        "path": "cat",
+        "description": "This pages is Cat.",
+        "keyword": "Cat 猫 ネコ"
+      },
+      "dog": {
+        "id": 3,
+        "title": "Dog",
+        "path": "dog",
+        "description": "This pages is Dog.",
+        "keyword": "Dog 犬 イヌ"
+      },
+      "bird": {
+        "id": 4,
+        "title": "Bird",
+        "path": "bird",
+        "description": "This pages is Bird.",
+        "keyword": "Bird 鳥 トリ"
+      }
+    }
+  }
+}

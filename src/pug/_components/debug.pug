@@ -1,0 +1,40 @@
+style.
+  #debug a {
+    color: orange;
+  }
+div#debug.bg-secondary.text-white
+  .container
+    //- pageIDからCurrentを検索
+    for k, v in pages
+      if v == pageID
+        h2 This Page is 
+          span.text-warning '#{v}'
+
+    h3 Site Infomation
+    div.table-responsive
+      table.table.table-bordered.text-white
+        tr
+          th siteName
+          th URL
+        tr
+          td  #{siteName}
+          td  #{siteURL}
+      
+    h3 Page Infomation
+    div.table-responsive
+      table.table.table-bordered.text-white
+        tr
+          th id
+          th Title 
+          th Path 
+          th Description
+          th Keyword
+        
+        each k, v in pages
+          tr
+            td #{k.id}
+            td #{k.title}
+            td
+              a(href=`/${k.path}`) #{siteURL}/#{k.path}
+            td #{k.description}
+            td #{k.keyword}
