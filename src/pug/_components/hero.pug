@@ -1,4 +1,10 @@
-// ========== HeroHeader START ==========
+// ========== HeroHeader Start ==========
 div.hero
   h2 HeroHeader
-// ========== HeroHeader END ==========
+  each k, v in pages
+    if pageID == v
+      li.header-nav__item.current #{pages[v]['title']}
+  //- else
+  //-   li.header-nav__item: a.header-nav__link(href=`/jinji-i/${k.path}`) #{v}
+
+// ========== HeroHeader End ==========

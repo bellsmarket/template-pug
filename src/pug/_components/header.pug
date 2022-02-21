@@ -1,4 +1,4 @@
-// ========== Header START ==========
+// ========== Header Start ==========
 header.l-header.js-header
   div.container
     h2 ヘッダー
@@ -8,5 +8,5 @@ header.l-header.js-header
           if pageID == v
             li.header-nav__item.current #{v}
           else
-            li.header-nav__item: a.header-nav__link(href=`/${k.path}`) #{v}
-// ==========  Header END ==========
+            li.header-nav__item: a.header-nav__link(href=`/jinji-i/${k.path}`) #{pages[v]['title']}
+// ==========  Header End ==========

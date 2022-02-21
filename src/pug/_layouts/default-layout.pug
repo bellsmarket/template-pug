@@ -1,8 +1,8 @@
 //- Global Variables
 - let debugFlag = 0 
+- let pages = json.pages
 - let siteName = json.siteInfo.name
 - let siteURL = json.siteInfo.url
-- let pages = json.pages
 - let lang = json.siteInfo.lang
 
 //- Variables from Each Page.
@@ -20,7 +20,7 @@ html(lang=lang)
     include ../_components/header
     
     main.l-main.border.border-primary
-      for k, v in json.pages
+      for k, v in pages
         if v == pageID
           h2 This Page is => 
             span.text-danger '#{v}'
