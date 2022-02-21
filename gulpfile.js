@@ -63,6 +63,9 @@ function reload(done) {
 const styles = () => {
   return (
     gulp.src(FILEPATH.src.scss)
+    .pipe(debug({
+      title: 'SCSS Compile =>'
+    }))
     .pipe(sourcemaps.init())
     .pipe(plumber({
       errorHandler: notify.onError({
@@ -75,14 +78,17 @@ const styles = () => {
       overrideBrowserslist: ['last 3 versions'],
       cascade: false
     }))
+    // expanded, nested, compact, compressed
     .pipe(sass({outputStyle: 'expanded'}))
     .pipe(gulp.dest(FILEPATH.dest.css))
     .pipe(sass({outputStyle: 'compressed'}))
     .pipe(sourcemaps.write('./'))
-    .pipe(rename('styles.min.css'))
+    .pipe(rename({
+      suffix: '.min'
+    }))
     .pipe(gulp.dest(FILEPATH.dest.css))
     .pipe(connect.reload())
-    .pipe(notify('Compile'))
+    // .pipe(notify('Compile'))
   );
 };
 
@@ -142,7 +148,7 @@ const views = () => {
 const singleviews = (file) => {
   const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
 
-  let expectPATH = 'src/pug/pages/'
+  let expectPATH = 'src/pug/pages/';
 
   let targetFILE = file.replace(expectPATH, '');
   let destPATH = path.dirname(FILEPATH.dest.html + '/' + targetFILE);
@@ -164,14 +170,15 @@ const singleviews = (file) => {
       pretty: true
     }))
     .pipe(gulp.dest(destPATH))
-  )
+    .pipe(notify('Compile'))
+  );
 };
 
 
 const debugPATH = () => {
   console.log('targetFILE => ' + targetFILE);
   console.log('destPATH => ' + destPATH);
-}
+};
 
 
 // gulp.watch(TargetFILE, Function)
@@ -187,6 +194,12 @@ function watchTask(done) {
   done();
 }
 
+const copy = () => {
+  return (
+    console.log('copy')
+  )
+  done();
+}
 
 const watch = gulp.parallel(watchTask);
 // const watch = gulp.parallel(watchTask, reload);
@@ -197,6 +210,7 @@ exports.styles = styles;
 exports.scripts = scripts;
 exports.html = html;
 exports.views = views;
+exports.copy = copy;
 exports.watch = watch;
 exports.build = build;
 exports.default = watch;

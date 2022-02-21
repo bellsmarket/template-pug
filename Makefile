@@ -8,8 +8,16 @@ build:
 watch:
 	gulp watch&
 
-make diff:
+diff:
 	diff -rq  ./src/pug/pages ./dest |sort|rg -v '\.html' |rg -v '\.pug'
 
-make check:
+check:
 	echo ${pugPATH}
+
+reset:
+	rm -rf ./dest/assets/js ||exit 1
+	rm -rf ./dest/assets/css ||exit 1
+	ls ./dest |grep -v -E "^assets"| xargs -I '{}' rm -rf ./dest/'{}'
+
+createDir:
+	mkdir ./dest/cat ./dest/dog ./dest/bird
