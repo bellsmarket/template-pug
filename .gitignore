@@ -1,5 +1,10 @@
 dest
 node_modules
 src/img/*
+src/js/bootstrap.bundle.js
+src/js/bootstrap.bundle.js.map
+src/js/jquery.js
+src/favicon.ico
+setup.sh
 yarn.lock
 
