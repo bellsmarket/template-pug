@@ -1,9 +1,9 @@
 // ========== HeroHeader Start ==========
 div.hero
-  h2 HeroHeader
+  h1.text-center HeroHeader
   each k, v in pages
     if pageID == v
-      li.header-nav__item.current #{pages[v]['title']}
+      p.header-nav__item.current.text-center #{pages[v]['title']}
   //- else
   //-   li.header-nav__item: a.header-nav__link(href=`/${k.path}`) #{v}
 

@@ -50,6 +50,14 @@
         "breadcrumb": 1,
         "description": "This pages is Lion.",
         "keyword": "Lion 獅子 ライオン"
+      },
+      "blog": {
+        "id": 6,
+        "title": "Blog",
+        "path": "blog",
+        "breadcrumb": 1,
+        "description": "This pages is Blog.",
+        "keyword": "Blog ブログ"
       }
     }
   }

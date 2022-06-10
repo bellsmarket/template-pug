@@ -30,19 +30,21 @@ html(lang=lang)
 
     // ========== main Start ==========
     main.l-main.border.border-primary
-      for k, v in pages
-        if v == pageID
-          h2 This Page is => 
-            span.text-danger '#{v}'
+        for k, v in pages
+          if v == pageID
+            div.container
+              h2 This Page is => 
+                span.text-danger '#{v}'
 
-      if pageName !== 'home'
-        include ../_components/hero
-        
-      if pageName == 'home'
-        block content
+        //- if pageName !== 'home'
+        //-   include ../_components/hero
           
-      else
-          div.container.content-container
+        if pageName == 'home'
+          div.l-home-content(id=pageID + "-content")
+            block content
+            
+        else
+          
           div.l-page-content(id=pageID + "-content")
             // ========== PageContenst Start ==========
             block content
