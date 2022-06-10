@@ -11,7 +11,14 @@ const gulp    = require('gulp'),
       cached       = require('gulp-cached'),
       autoprefixer = require('gulp-autoprefixer'),
       debug = require('gulp-debug'),
-      data  = require('gulp-data');
+      data  = require('gulp-data'),
+      imagemin = require('gulp-imagemin');
+
+const mode = require('gulp-mode')({
+  modes: ['prod', 'dev'],
+  default: 'dev',
+  verbose: false,
+});
 
 const path = require('path'),
       fs = require('fs');
@@ -33,7 +40,7 @@ const FILEPATH = {
     pug: './src/pug/pages/**/*.pug',
     scss: './src/scss/**/*.scss',
     js: './src/js/*.js',
-    img: './src/img',
+    img: './src/img/**/*',
     font: './src/font',
   }
 };
@@ -172,6 +179,17 @@ const singleviews = (file) => {
   );
 };
 
+// 画像圧縮
+const images = done => {
+    gulp.src('./src/img/**/*', {since : gulp.lastRun(images)})
+    .pipe(mode.prod(imagemin([
+      imagemin.optipng(),
+      imagemin.gifsicle()
+      ]
+    )))
+    .pipe(gulp.dest(FILEPATH.dest.img))
+    done();
+};
 
 const debugPATH = () => {
   console.log('targetFILE => ' + targetFILE);
@@ -184,6 +202,7 @@ function watchTask(done) {
   gulp.watch('*.html', html);
   gulp.watch(FILEPATH.src.scss, styles);
   gulp.watch(FILEPATH.src.js, scripts);
+  gulp.watch(FILEPATH.src.img, images);
 
   var singlePUG = gulp.watch(FILEPATH.src.pug);
   singlePUG.on('change', (e, stats) => {
@@ -201,9 +220,10 @@ const copy = () => {
 
 // const watch = gulp.parallel(watchTask);
 const watch = gulp.parallel(watchTask, server);
-const build = gulp.series(gulp.parallel(styles, scripts, html, views));
+const build = gulp.series(gulp.parallel(styles, scripts, html, views, images));
 
 exports.server = server;
+exports.images = images;
 exports.styles = styles;
 exports.scripts = scripts;
 exports.html = html;

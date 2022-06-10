@@ -12,18 +12,12 @@ include ./meta
       
       
 // ========== CSS Start ==========
-link(rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css")
+link(rel="stylesheet" href="/assets/css/bootstrap.min.css")
 if pageID == 'home'
   link(rel="stylesheet" href="/assets/css/home.css")
 link(rel="stylesheet" href="/assets/css/style.css")
 
 // ========== JS Start ==========
-script(src="https://code.jquery.com/jquery-3.3.1.slim.min.js")
-script(src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js")
-script(src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js")
-
-if pageID == 'home'
-  script(src="/assts/home.css")
 
 block title
 for k, v in pages
