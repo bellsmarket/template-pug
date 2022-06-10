@@ -116,7 +116,6 @@ const scripts = () => {
 };
 
 
-// Wip
 const html = () => {
   return (
     gulp.src('./dest/*.html')
@@ -187,15 +186,21 @@ const images = done => {
       imagemin.gifsicle()
       ]
     )))
-    .pipe(gulp.dest(FILEPATH.dest.img))
+    .pipe(gulp.dest(FILEPATH.dest.img));
     done();
 };
 
-const debugPATH = () => {
-  console.log('targetFILE => ' + targetFILE);
-  console.log('destPATH => ' + destPATH);
-};
+const copy = done => {
+  flag = fs.existsSync('./src/favicon.ico');
+  destflag = fs.existsSync('./dest/favicon.ico');
 
+  console.log(flag);
+  if(flag && !destflag) {
+    gulp.src('./src/favicon.ico')
+    .pipe(gulp.dest('./dest/'));
+  }
+  done();
+};
 
 // gulp.watch(TargetFILE, Function)
 function watchTask(done) {
@@ -211,12 +216,7 @@ function watchTask(done) {
   done();
 }
 
-const copy = () => {
-  return (
-    console.log('copy')
-  )
-  done();
-}
+
 
 // const watch = gulp.parallel(watchTask);
 const watch = gulp.parallel(watchTask, server);
