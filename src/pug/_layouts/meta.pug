@@ -1,0 +1,54 @@
+
+// ========== OGP START ==========
+meta(property="og:locale" content="ja_JP")
+meta(property="og:type" content="website")
+  
+for k, v in pages
+  if pageID == v
+    if pageID == 'home'
+      meta(property="og:title" content=siteName) 
+    else
+      meta(property="og:title" content=pages[v]['keyword'] + " | " + siteName) 
+    meta(property="og:description" content=pages[v]['description']) 
+      
+meta(property="og:url" content=siteURL)
+for k, v in pages
+  if pageID == v
+    if pageID == 'home'
+      meta(property="og:site_name" content=siteName)
+    else
+      
+      meta(property="og:site_name" content=pages[v]['keyword'] + " | " + siteName)
+        
+meta(property="og:image" content=fb)
+meta(property="og:image:secure_url" content=fb)
+
+
+
+// ========== TwitterTag START ==========
+meta(name="twitter:card" content="summary_large_image")
+for k, v in pages
+  if pageID == v
+    if pageID == 'home'
+      meta(name="twitter:title" content=siteName)
+    else
+      meta(name="twitter:title" content=pages[v]['keyword'] + " | " + siteName)
+    meta(name="twitter:description" content=pages[v]['description'])
+        
+meta(name="twitter:site" content=twID)
+meta(name="twitter:image" content=tw)
+meta(name="twitter:creator" content=twID)
+  
+  
+// ========== favicon START ==========
+
+link(rel="shortcut icon" href="/favicon.ico" type="image/x-icon")
+link(rel="apple-touch-icon" href="/apple-touch-icon.png")
+link(rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png")
+link(rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png")
+link(rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png")
+link(rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png")
+link(rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png")
+link(rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png")
+link(rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png")
+link(rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png")

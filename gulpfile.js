@@ -1,22 +1,20 @@
 const gulp    = require('gulp'),
-  sass    = require('gulp-sass')(require('sass')),
-  plumber = require('gulp-plumber'),
-  connect = require('gulp-connect'),
-  notify  = require('gulp-notify'),
-  pug     = require('gulp-pug'),
-  rename  = require('gulp-rename'),
-  uglify  = require('gulp-uglify'),
-  sourcemaps    = require('gulp-sourcemaps'),
-  changed       = require('gulp-changed'),
-  cached       = require('gulp-cached'),
-  autoprefixer = require('gulp-autoprefixer'),
-  debug = require('gulp-debug'),
-  data  = require('gulp-data');
+      sass    = require('gulp-sass')(require('sass')),
+      plumber = require('gulp-plumber'),
+      connect = require('gulp-connect'),
+      notify  = require('gulp-notify'),
+      pug     = require('gulp-pug'),
+      rename  = require('gulp-rename'),
+      uglify  = require('gulp-uglify'),
+      sourcemaps    = require('gulp-sourcemaps'),
+      changed       = require('gulp-changed'),
+      cached       = require('gulp-cached'),
+      autoprefixer = require('gulp-autoprefixer'),
+      debug = require('gulp-debug'),
+      data  = require('gulp-data');
 
 const path = require('path'),
       fs = require('fs');
-
-
 
 // PATH
 const FILEPATH = {
@@ -57,14 +55,6 @@ const server = (done) => {
   });
   done();
 };
-
-// function reload(done) {
-//   connect.server({
-//     livereload: true,
-//     port: 8080
-//   });
-//   done();
-// }
 
 
 //scss Compile

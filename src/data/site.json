@@ -4,6 +4,10 @@
       "name": "template-pug",
       "url": "localhost",
       "lang": "ja",
+      "facebook": "https://facebook.com/xxxxxxx/",
+      "facebookid": "@facebook",
+      "twitter": "https://twitter.com/xxxxxxx/",
+      "twitterid": "@twitter",
       "debug": 1
     },
     "pages": {
@@ -38,6 +42,14 @@
         "breadcrumb": 1,
         "description": "This pages is Bird.",
         "keyword": "Bird 鳥 トリ"
+      },
+      "lion": {
+        "id": 5,
+        "title": "Lion",
+        "path": "lion",
+        "breadcrumb": 1,
+        "description": "This pages is Lion.",
+        "keyword": "Lion 獅子 ライオン"
       }
     }
   }
