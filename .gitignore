@@ -7,5 +7,5 @@ src/js/bootstrap.bundle.js.map
 src/js/jquery.js
 src/favicon.ico
 setup.sh
-yarn.lock
+./yarn.lock
 
