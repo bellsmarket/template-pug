@@ -1,0 +1,51 @@
+//- Global Variables
+- let debugFlag = 0 
+- let pages = json.pages
+- let siteName = json.siteInfo.name
+- let siteURL = json.siteInfo.url
+- let lang = json.siteInfo.lang
+
+//- Variables from Each Page.
+block variables
+
+//- tempalate
+doctype html
+html(lang=lang)
+  head
+    //- Google Tag Manager 
+    include ../_components/tag-manager-before
+    include ../_layouts/head
+
+  body(id=pageID)
+    h1 #{pages.path}
+    if debugFlag == 1
+      include ../_components/debug
+    include ../_layouts/header
+    
+    if pageName !== 'home'
+      include ../_components/breadcrumb
+
+    // ========== main Start ==========
+    main.l-main.border.border-primary
+      for k, v in pages
+        if v == pageID
+          h2 This Page is => 
+            span.text-danger '#{v}'
+
+      if pageName !== 'home'
+        include ../_components/hero
+        
+      if pageName == 'home'
+        block content
+          
+      else
+          div.container.content-container
+          div.l-page-content(id=pageName + "-content")
+            // ========== PageContenst Start ==========
+            block content
+            // ========== PageContenst End ==========
+
+
+    // ========== main End ==========
+    include ../_layouts/footer
+    include ../_layouts/script

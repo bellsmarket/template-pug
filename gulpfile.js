@@ -49,14 +49,22 @@ function showPathObj(obj) {
   return false;
 }
 
-
-function reload(done) {
+const server = (done) => {
   connect.server({
+    root: './dest',
     livereload: true,
     port: 8080
   });
   done();
-}
+};
+
+// function reload(done) {
+//   connect.server({
+//     livereload: true,
+//     port: 8080
+//   });
+//   done();
+// }
 
 
 //scss Compile
@@ -201,11 +209,11 @@ const copy = () => {
   done();
 }
 
-const watch = gulp.parallel(watchTask);
-// const watch = gulp.parallel(watchTask, reload);
+// const watch = gulp.parallel(watchTask);
+const watch = gulp.parallel(watchTask, server);
 const build = gulp.series(gulp.parallel(styles, scripts, html, views));
 
-exports.reload = reload;
+exports.server = server;
 exports.styles = styles;
 exports.scripts = scripts;
 exports.html = html;
