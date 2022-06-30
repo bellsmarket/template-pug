@@ -1,18 +1,23 @@
-const gulp    = require('gulp'),
-      sass    = require('gulp-sass')(require('sass')),
-      plumber = require('gulp-plumber'),
-      connect = require('gulp-connect'),
-      notify  = require('gulp-notify'),
-      pug     = require('gulp-pug'),
-      rename  = require('gulp-rename'),
-      uglify  = require('gulp-uglify'),
+const path          = require('path'),
+      fs            = require('fs'),
+      gulp          = require('gulp'),
+      sass          = require('gulp-sass')(require('sass')),
+      plumber       = require('gulp-plumber'),
+      connect       = require('gulp-connect'),
+      notify        = require('gulp-notify'),
+      pug           = require('gulp-pug'),
+      rename        = require('gulp-rename'),
+      uglify        = require('gulp-uglify'),
       sourcemaps    = require('gulp-sourcemaps'),
       changed       = require('gulp-changed'),
-      cached       = require('gulp-cached'),
-      autoprefixer = require('gulp-autoprefixer'),
-      debug = require('gulp-debug'),
-      data  = require('gulp-data'),
-      imagemin = require('gulp-imagemin');
+      cached        = require('gulp-cached'),
+      autoprefixer  = require('gulp-autoprefixer'),
+      debug         = require('gulp-debug'),
+      data          = require('gulp-data'),
+      imagemin      = require('gulp-imagemin'),
+      webpack       = require("webpack"),
+      webpackStream = require("webpack-stream"),
+      webpackConfig = require("./webpack.config");
 
 const mode = require('gulp-mode')({
   modes: ['prod', 'dev'],
@@ -20,8 +25,6 @@ const mode = require('gulp-mode')({
   verbose: false,
 });
 
-const path = require('path'),
-      fs = require('fs');
 
 // PATH
 const FILEPATH = {
@@ -45,14 +48,14 @@ const FILEPATH = {
   }
 };
 
-function showPathObj(obj) {
+const showPathObj = (obj) => {
   for (let i in obj) {
     for (let j  in obj[i]) {
       console.log(FILEPATH[i][j]);
     }
   }
   return false;
-}
+};
 
 const server = (done) => {
   connect.server({
@@ -88,9 +91,9 @@ const styles = () => {
     .pipe(gulp.dest(FILEPATH.dest.css))
     .pipe(sass({outputStyle: 'compressed'}))
     .pipe(sourcemaps.write('./'))
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    // .pipe(rename({
+    //   suffix: '.min'
+    // }))
     .pipe(gulp.dest(FILEPATH.dest.css))
     .pipe(connect.reload())
     // .pipe(notify('Compile'))
@@ -98,18 +101,28 @@ const styles = () => {
 };
 
 
+const compress = [
+  './src/js/bootstrap.bundle.js',
+  './src/js/jquery.js',
+];
+// 除外ファイル
+const ignoreCompress = [
+  '!' + './src/js/bundle/*.js',
+  '!' + './src/js/webpack.js',
+];
 
 // Wip
 // JS Compile
 const scripts = () => {
   return (
-    gulp.src(FILEPATH.src.js)
+    // gulp.src(FILEPATH.src.js, ignoreCompress)
+    gulp.src(compress, ignoreCompress)
     // .pipe(plumber())
     .pipe(gulp.dest(FILEPATH.dest.js))
     .pipe(uglify())
-    .pipe(rename({
-      suffix: '.min'
-    }))
+    // .pipe(rename({
+    //   suffix: '.min'
+    // }))
     .pipe(gulp.dest(FILEPATH.dest.js))
     .pipe(connect.reload())
   );
@@ -178,7 +191,14 @@ const singleviews = (file) => {
   );
 };
 
-// 画像圧縮
+
+// webpack
+const bundleJs = () => {
+  return webpackStream(webpackConfig, webpack)
+  .pipe(gulp.dest(FILEPATH.dest.js));
+}; 
+
+// Image Comporess 
 const images = done => {
     gulp.src('./src/img/**/*', {since : gulp.lastRun(images)})
     .pipe(mode.prod(imagemin([
@@ -194,7 +214,6 @@ const copy = done => {
   flag = fs.existsSync('./src/favicon.ico');
   destflag = fs.existsSync('./dest/favicon.ico');
 
-  console.log(flag);
   if(flag && !destflag) {
     gulp.src('./src/favicon.ico')
     .pipe(gulp.dest('./dest/'));
@@ -208,6 +227,7 @@ function watchTask(done) {
   gulp.watch(FILEPATH.src.scss, styles);
   gulp.watch(FILEPATH.src.js, scripts);
   gulp.watch(FILEPATH.src.img, images);
+	gulp.watch(FILEPATH.src.js, bundleJs);
 
   var singlePUG = gulp.watch(FILEPATH.src.pug);
   singlePUG.on('change', (e, stats) => {
@@ -220,12 +240,13 @@ function watchTask(done) {
 
 // const watch = gulp.parallel(watchTask);
 const watch = gulp.parallel(watchTask, server);
-const build = gulp.series(gulp.parallel(styles, scripts, html, views, images));
+const build = gulp.series(gulp.parallel(styles, scripts, html, views, images, bundleJs));
 
 exports.server = server;
 exports.images = images;
 exports.styles = styles;
 exports.scripts = scripts;
+exports.bundleJs = bundleJs;
 exports.html = html;
 exports.views = views;
 exports.copy = copy;
