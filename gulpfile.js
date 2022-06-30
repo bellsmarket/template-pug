@@ -77,8 +77,8 @@ const styles = () => {
     .pipe(sourcemaps.init())
     .pipe(plumber({
       errorHandler: notify.onError({
-        title: 'scss Compile Failed', // 任意のタイトルを表示させる
-        message: '<%= error.message %>' // エラー内容を表示させる
+        title: 'scss Compile Failed', // show Any Title
+        message: '<%= error.message %>' // Notie Error
       })
     }))
     .pipe(sass())
@@ -104,9 +104,6 @@ const styles = () => {
 const compress = [
   './src/js/bootstrap.bundle.js',
   './src/js/jquery.js',
-];
-// 除外ファイル
-const ignoreCompress = [
   '!' + './src/js/bundle/*.js',
   '!' + './src/js/webpack.js',
 ];
@@ -115,8 +112,7 @@ const ignoreCompress = [
 // JS Compile
 const scripts = () => {
   return (
-    // gulp.src(FILEPATH.src.js, ignoreCompress)
-    gulp.src(compress, ignoreCompress)
+    gulp.src(compress)
     // .pipe(plumber())
     .pipe(gulp.dest(FILEPATH.dest.js))
     .pipe(uglify())
