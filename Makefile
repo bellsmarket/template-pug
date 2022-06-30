@@ -21,3 +21,6 @@ reset:
 
 createDir:
 	mkdir ./dest/cat ./dest/dog ./dest/bird
+
+destroy:
+	rm -rf ./dest || exit 1
