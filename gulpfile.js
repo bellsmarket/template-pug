@@ -193,11 +193,11 @@ const concatCss = done => {
   ])
   .pipe(concat('lib.css'))
   .pipe(sass())
-  // .pipe(sass({outputStyle: 'compressed'}))
-  .pipe(sourcemaps.write('./'))
+  .pipe(sass({outputStyle: 'compressed'}))
   .pipe(rename({
     suffix: '.min'
   }))
+  .pipe(sourcemaps.write('./'))
   .pipe(dest(FILEPATH.dest.css));
   done();
 };

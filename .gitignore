@@ -1,6 +1,7 @@
 dest
 node_modules
 src/img/*
+!src/img/ajax-loader.gif
 /* src/scss/_base/_bs-variables.scss */
 /* src/js/bootstrap.bundle.js */
 /* src/js/bootstrap.bundle.js.map */
