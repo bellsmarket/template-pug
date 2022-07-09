@@ -196,17 +196,21 @@ const concatCss = done => {
     './src/scss/_lib/_animsition.css',
   ])
   .pipe(concat('lib.css'))
+  .pipe(sass())
+  // .pipe(sass({outputStyle: 'compressed'}))
+  .pipe(sourcemaps.write('./'))
   .pipe(rename({
     suffix: '.min'
   }))
-  .pipe(cleanCss())
   .pipe(dest(FILEPATH.dest.css));
   done();
 };
+
 // JS 外部ライブラリ 結合
 const concatJs = done => {
   src([
     './src/js/_lib/slick.js',
+    './src/js/_lib/inview.js',
     './src/js/_lib/gsap.min.js',
     './src/js/_lib/ofi.min.js',
     './src/js/_lib/animsition.min.js',
@@ -249,7 +253,7 @@ const copyFonts = done => {
 
 // watch(TargetFILE, Function)
 const watchTask = done => {
-  watch('*.html', html);
+  // watch('*.html', html);
   watch(FILEPATH.src.scss, series(styles, browserReload));
   watch(FILEPATH.src.img, series(images, browserReload));
 	watch(FILEPATH.src.js, series(bundleJs, browserReload));
