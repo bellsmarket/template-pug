@@ -1,13 +1,13 @@
 //- Global Variables
-- let debugFlag = 0
-- let pages = json.pages
-- let siteName = json.siteInfo.name
-- let siteURL = json.siteInfo.url
-- let fb = json.siteInfo.facebook
-- let fbID = json.siteInfo.facebookid
-- let tw = json.siteInfo.twitter
-- let twID = json.siteInfo.twitterid
-- let lang = json.siteInfo.lang
+- const debugFlag = 0
+- const siteName  = json.siteInfo.name
+- const siteURL   = json.siteInfo.url
+- const lang      = json.siteInfo.lang
+- const facebook  = json.siteInfo.facebook
+- const facebookID= json.siteInfo.facebookID
+- const twitter   = json.siteInfo.twitter
+- const twitterID = json.siteInfo.twitterID
+- const pages     = json.pages
 
 //- Variables from Each Page.
 block variables
@@ -25,31 +25,27 @@ html(lang=lang)
       include ../_components/debug
     include ../_layouts/header
     
-    if pageName !== 'home'
+    if pageID !== 'home'
       include ../_layouts/breadcrumb
 
     // ========== main Start ==========
     main.l-main.border.border-primary
-        for k, v in pages
-          if v == pageID
-            div.container
-              h2 This Page is => 
-                span.text-danger '#{v}'
+        //- for k, v in pages
+        //-   if v == pageID
+        //-     div.container
+        //-       h2 This Page is => 
+        //-         span.text-danger '#{v}'
 
-        //- if pageName !== 'home'
-        //-   include ../_components/hero
-          
-        if pageName == 'home'
+        if pageID == 'home'
           div.l-home-content(id=pageID + "-content")
             block content
             
         else
-          
           div.l-page-content(id=pageID + "-content")
             // ========== PageContenst Start ==========
             block content
             // ========== PageContenst End ==========
-
+            block sidemenu 
 
     // ========== main End ==========
     include ../_layouts/footer

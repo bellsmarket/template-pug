@@ -76,7 +76,6 @@ const views = () => {
 
   return (
     src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
-    // src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
     .pipe(debug({
       title: 'PugCompile =>'
     }))
@@ -92,7 +91,6 @@ const views = () => {
 };
 
 
-// 更新があったファイルのみをコンパイル
 // Pug => html
 const singleviews = (file) => {
   const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
@@ -145,7 +143,7 @@ const styles = () => {
     // expanded, nested, compact, compressed
     // .pipe(sass({outputStyle: 'expanded'}))
     // .pipe(dest(FILEPATH.dest.css))
-    .pipe(sass({outputStyle: 'compressed'}))
+    // .pipe(sass({outputStyle: 'compressed'}))
     .pipe(sourcemaps.write('./'))
     .pipe(rename({
       suffix: '.min'
@@ -169,8 +167,7 @@ const compress = [
 const scripts = () => {
   return (
     src(compress)
-    // .pipe(plumber())
-    // .pipe(dest(FILEPATH.dest.js))
+    .pipe(plumber())
     .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
@@ -209,11 +206,15 @@ const concatCss = done => {
 // JS 外部ライブラリ 結合
 const concatJs = done => {
   src([
-    './src/js/_lib/slick.js',
+    // './src/js/_lib/slick.js',
+    // './src/js/_lib/gsap.min.js',
+    // './src/js/_lib/ofi.min.js',
+    // './src/js/_lib/animsition.min.js',
+    './node_modules/slick-carousel/slick/slick.min.js',
+    './node_modules/gsap/dist/gsap.min.js',
+    './node_modules/object-fit-images/dist/ofi.min.js',
+    './node_modules/animsition/dist/js/animsition.min.js',
     './src/js/_lib/inview.js',
-    './src/js/_lib/gsap.min.js',
-    './src/js/_lib/ofi.min.js',
-    './src/js/_lib/animsition.min.js',
  ])
   .pipe(concat('lib.js'))
   .pipe(dest(FILEPATH.dest.js));
@@ -231,6 +232,7 @@ const images = done => {
     .pipe(dest(FILEPATH.dest.img));
     done();
 };
+
 const copyFavicon = done => {
   flag = fs.existsSync('./src/favicon.ico');
   destflag = fs.existsSync('./dest/favicon.ico');
@@ -243,13 +245,12 @@ const copyFavicon = done => {
   src('./src/fonts/*').pipe(dest('./dest/assets/fonts/'));
   done();
 };
+
 const copyFonts = done => {
   fonts = './src/fonts/*';
   src(fonts).pipe(dest('./dest/assets/fonts/'));
   done();
 };
-
-
 
 // watch(TargetFILE, Function)
 const watchTask = done => {
@@ -289,7 +290,6 @@ exports.concatJs = concatJs;
 exports.images = images;
 exports.copyFavicon = copyFavicon;
 exports.copyFonts = copyFonts;
-
 
 exports.watch = watch;
 exports.build = build;

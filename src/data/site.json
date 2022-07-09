@@ -5,10 +5,10 @@
       "url": "localhost",
       "lang": "ja",
       "facebook": "https://facebook.com/xxxxxxx/",
-      "facebookid": "@facebook",
+      "facebookID": "@facebook",
       "twitter": "https://twitter.com/xxxxxxx/",
-      "twitterid": "@twitter",
-      "debug": 1
+      "twitterID": "@twitter",
+      "debug": 0
     },
     "pages": {
       "home": {
@@ -50,14 +50,6 @@
         "breadcrumb": 1,
         "description": "This pages is Lion.",
         "keyword": "Lion 獅子 ライオン"
-      },
-      "blog": {
-        "id": 6,
-        "title": "Blog",
-        "path": "blog",
-        "breadcrumb": 1,
-        "description": "This pages is Blog.",
-        "keyword": "Blog ブログ"
       }
     }
   }

@@ -1,12 +1,12 @@
 // ========== Header Start ==========
-header.l-header.js-header
+header.l-header#js-header
   div.container
     h2 ヘッダー
-    nav.l-header__nav.gnav
-      ul.gnav__nav-list.d-flex.justify-content-between
+    nav.l-header__nav.global-nav
+      ul.global-nav__list.d-flex.justify-content-between
         each k, v in pages
           if pageID == v
-            li.gnav__nav-item.current #{pages[v]['title']}
+            li.global-nav__item.global-nav__item--current #{pages[v]['title']}
           else
-            li.header__nav-item: a.header-nav__link(href=`/${k.path}`) #{pages[v]['title']}
+            li.global-nav__item: a.global-nav__link(href=`/${k.path}`) #{pages[v]['title']}
 // ==========  Header End ==========

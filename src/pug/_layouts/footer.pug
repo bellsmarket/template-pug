@@ -1,10 +1,12 @@
 // ==========  Footer Start ==========
-footer.l-footer
+footer.l-footer#js-footer
   div.container
     h2 フッター
-    ul.d-flex.justify-content-between
-      li test01
-      li test02
-      li test03
-      li test04
+    nav.l-footer__nav.nav
+      ul.nav__list.d-flex.justify-content-between
+        each k, v in pages
+          if pageID == v
+            li.nav__item.nav__item--current #{pages[v]['title']}
+          else
+            li.nav__item: a.nav__link(href=`/${k.path}`) #{pages[v]['title']}
 // ==========  Footer End ==========
