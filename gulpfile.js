@@ -142,12 +142,12 @@ const styles = () => {
     // expanded, nested, compact, compressed
     // .pipe(sass({outputStyle: 'expanded'}))
     // .pipe(dest(FILEPATH.dest.css))
-    // .pipe(sass({outputStyle: 'compressed'}))
-    .pipe(sourcemaps.write('./'))
+    .pipe(sass({outputStyle: 'compressed'}))
     .pipe(rename({
       suffix: '.min'
     }))
     .pipe(mode.prod(cleanCss()))
+    .pipe(sourcemaps.write('./'))
     .pipe(dest(FILEPATH.dest.css))
     .pipe(connect.reload())
     // .pipe(notify('SCSS Compile'))
