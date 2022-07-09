@@ -1,0 +1,21 @@
+.inView {
+  opacity: 0;
+  transform: translateY(50px);
+  transition-property: transform, opacity;
+  transition-timing-function: cubic-bezier(0.5, 0.7, 0.5, 1);
+  transition-duration: .6s;
+  transition-delay: 0.2s;
+  backface-visibility: hidden;
+}
+
+@media screen and (max-width: 640px) {
+  .inView {
+    transition-duration: .6s;
+    transition-delay: 0.2s;
+  }
+}
+
+.inView.inViewOn {
+  opacity: 1;
+  transform: translateY(0);
+}
