@@ -189,8 +189,8 @@ const concatCss = done => {
   src([
     './src/scss/_lib/_slick-theme.scss',
     './src/scss/_lib/_slick.scss',
-    // './src/scss/_lib/_animsition.css',
-    './node_modules/animsition/dist//animsition.css',
+    'node_modules/animsition/dist/css/animsition.css',
+
   ])
   .pipe(concat('lib.css'))
   .pipe(sass())
