@@ -2,9 +2,6 @@ style.
   #debug a {
     color: yellow;
   }
-script.
-  $(function(){
-  })
 div#debug.bg-secondary.text-white
   .container
     //- pageIDからCurrentを検索
@@ -12,32 +9,80 @@ div#debug.bg-secondary.text-white
       if v == pageID
         h2 This Page is 
           span.text-warning '#{v}'
-
-    h3 Site Infomation
-    div.table-responsive
-      table.table.table-bordered.text-white
-        tr
-          th siteName
-          th URL
-        tr
-          td  #{siteName}
-          td  #{siteURL}
-      
-    h3 Page Structure 
-    div.table-responsive
-      table.table.table-bordered.text-white
-        tr
-          th id
-          th Title 
-          th Path 
-          th Description
-          th Keyword
-        
-        each k, v in pages
+          
+    div
+      h3 Site Infomation
+      div.table-responsive
+        table.table.table-bordered.text-white
           tr
-            td #{k.id}
-            td #{k.title}
-            td
-              a(href=`/${k.path}`) #{siteURL}/#{k.path}
-            td #{k.description}
-            td #{k.keyword}
+            th BreakPoint
+            td #{bp}
+          tr
+            th siteName
+            td  #{siteName}
+          tr
+            th URL
+            td  #{siteURL}
+          tr
+            th assetsPath
+            td #{assetsPath}
+          tr
+            th cssPath
+            td #{cssPath}
+          tr
+            th jsPath
+            td #{jsPath}
+          tr
+            th imgPath
+            td #{imgPath}
+          tr
+            th fontsPath
+            td #{fontsPath}
+          tr
+            th debugFlag
+            td #{debugFlag}
+          tr
+            th siteName
+            td #{siteName}
+          tr
+            th siteURL
+            td #{siteURL}
+          tr
+            th lang
+            td #{lang}
+          tr
+            th facebook
+            td #{facebook}
+          tr
+            th facebookID
+            td #{facebookID}
+          tr
+            th twitter
+            td #{twitter}
+          tr
+            th twitterID
+            td #{twitterID}
+          tr
+            th pages
+            td #{pages}
+
+      div
+        h3 Page Structure 
+        div.table-responsive
+          table.table.table-bordered.text-white
+            tr
+              th id
+              th Title 
+              th Path 
+              th Description
+              th Keyword
+            
+            each k, v in pages
+              tr
+                td #{k.id}
+                td #{k.title}
+                td
+                  a(href=`/${k.path}`) #{siteURL}/#{k.path}
+                td #{k.description}
+                td #{k.keyword}
+    
