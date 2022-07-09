@@ -159,8 +159,10 @@ const styles = () => {
 const scripts = () => {
   return (
     src(
-      './src/js/jquery.js',
-      './src/js/bootstrap.bundle.js',
+      // './src/js/jquery.js',
+      // './src/js/bootstrap.bundle.js',
+      './node_modules/jquery/dist/jquery.js',
+      './node_modules/bootstrap/dist/js/bootstrap.bundle.js',
       '!' + './src/js/lib/*.js',
       '!' + './src/js/bundle/*.js',
       '!' + './src/js/main.js',
