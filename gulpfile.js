@@ -158,15 +158,13 @@ const styles = () => {
 // JS Compile
 const scripts = () => {
   return (
-    src(
-      './src/js/jquery.js',
-      './src/js/bootstrap.bundle.js',
-      // './node_modules/jquery/dist/jquery.js',
-      // './node_modules/bootstrap/dist/js/bootstrap.bundle.js',
-      '!' + './src/js/lib/*.js',
-      '!' + './src/js/bundle/*.js',
-      '!' + './src/js/main.js',
-    )
+    src([
+      './node_modules/jquery/dist/jquery.js',
+      './node_modules/bootstrap/dist/js/bootstrap.bundle.js',
+      // '!' + './src/js/lib/*.js',
+      // '!' + './src/js/bundle/*.js',
+      // '!' + './src/js/main.js',
+    ])
     .pipe(plumber())
     .pipe(uglify())
     .pipe(rename({
@@ -192,7 +190,6 @@ const concatCss = done => {
     './src/scss/_lib/_slick-theme.scss',
     './src/scss/_lib/_slick.scss',
     'node_modules/animsition/dist/css/animsition.css',
-
   ])
   .pipe(concat('lib.css'))
   .pipe(sass())
@@ -208,10 +205,6 @@ const concatCss = done => {
 // JS 外部ライブラリ 結合
 const concatJs = done => {
   src([
-    // './src/js/_lib/slick.js',
-    // './src/js/_lib/gsap.min.js',
-    // './src/js/_lib/ofi.min.js',
-    // './src/js/_lib/animsition.min.js',
     './node_modules/slick-carousel/slick/slick.min.js',
     './node_modules/gsap/dist/gsap.min.js',
     './node_modules/object-fit-images/dist/ofi.min.js',
