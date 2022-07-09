@@ -2,9 +2,9 @@ dest
 node_modules
 src/img/*
 /* src/scss/_base/_bs-variables.scss */
-src/js/bootstrap.bundle.js
-src/js/bootstrap.bundle.js.map
-src/js/jquery.js
+/* src/js/bootstrap.bundle.js */
+/* src/js/bootstrap.bundle.js.map */
+/* src/js/jquery.js*/ */
 src/favicon.ico
 yarn.lock
 yarn-error.log
