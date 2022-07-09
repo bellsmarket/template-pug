@@ -2,11 +2,11 @@
 footer.l-footer#js-footer
   div.container
     h2 フッター
-    nav.l-footer__nav.nav
-      ul.nav__list.d-flex.justify-content-between
+    nav.l-footer__nav.footer-nav
+      ul.footer-nav__list.d-flex.justify-content-between
         each k, v in pages
           if pageID == v
-            li.nav__item.nav__item--current #{pages[v]['title']}
+            li.footer-nav__item.footer-nav__item--current #{pages[v]['title']}
           else
-            li.nav__item: a.nav__link(href=`/${k.path}`) #{pages[v]['title']}
+            li.footer-nav__item: a.footer-nav__link(href=`/${k.path}`) #{pages[v]['title']}
 // ==========  Footer End ==========
