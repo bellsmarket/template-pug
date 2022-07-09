@@ -3,7 +3,6 @@ const path          = require('path'),
       {src, dest, watch, series, parallel, lastRun} = require('gulp'),
       sass          = require('gulp-sass')(require('sass')),
       cleanCss      = require('gulp-clean-css'),
-      minifyCss     = require('gulp-minify-css'),
       plumber       = require('gulp-plumber'),
       connect       = require('gulp-connect'),
       notify        = require('gulp-notify'),
@@ -117,11 +116,11 @@ const singleviews = (file) => {
       pretty: true
     }))
     .pipe(dest(destPATH))
-    // .pipe(notify('Compile'))
+    // .pipe(notify('Pug Compile'))
   );
 };
 
-//scss Compile
+//SCSS Compile
 const styles = () => {
   return (
     src(FILEPATH.src.scss, '!' + '.src/scss/_lib/*')
@@ -151,22 +150,21 @@ const styles = () => {
     .pipe(mode.prod(cleanCss()))
     .pipe(dest(FILEPATH.dest.css))
     .pipe(connect.reload())
-    // .pipe(notify('Compile'))
+    // .pipe(notify('SCSS Compile'))
   );
 };
 
-const compress = [
-  './src/js/jquery.js',
-  './src/js/bootstrap.bundle.js',
-  '!' + './src/js/lib/*.js',
-  '!' + './src/js/bundle/*.js',
-  '!' + './src/js/main.js',
-];
 
 // JS Compile
 const scripts = () => {
   return (
-    src(compress)
+    src(
+      './src/js/jquery.js',
+      './src/js/bootstrap.bundle.js',
+      '!' + './src/js/lib/*.js',
+      '!' + './src/js/bundle/*.js',
+      '!' + './src/js/main.js',
+    )
     .pipe(plumber())
     .pipe(uglify())
     .pipe(rename({
@@ -184,6 +182,7 @@ const bundleJs = () => {
   return webpackStream(webpackConfig, webpack)
   .pipe(dest(FILEPATH.dest.js));
 };
+
 
 // CSS 外部ライブラリ 結合
 const concatCss = done => {
@@ -254,11 +253,9 @@ const copyFonts = done => {
 
 // watch(TargetFILE, Function)
 const watchTask = done => {
-  // watch('*.html', html);
   watch(FILEPATH.src.scss, series(styles, browserReload));
   watch(FILEPATH.src.img, series(images, browserReload));
 	watch(FILEPATH.src.js, series(bundleJs, browserReload));
-	// watch(FILEPATH.src.pug, series(singleviews, browserReload));
 
   let singlePUG = watch(FILEPATH.src.pug);
   singlePUG.on('change', (e, stats) => {
