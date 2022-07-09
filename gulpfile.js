@@ -1,6 +1,6 @@
 const path          = require('path'),
       fs            = require('fs'),
-      gulp          = require('gulp'),
+      {src, dest, watch, series, parallel, lastRun} = require('gulp'),
       sass          = require('gulp-sass')(require('sass')),
       cleanCss      = require('gulp-clean-css'),
       minifyCss     = require('gulp-minify-css'),
@@ -74,7 +74,7 @@ const browserReload = done => {
 //scss Compile
 const styles = () => {
   return (
-    gulp.src(FILEPATH.src.scss, '!' + '.src/scss/_lib/*')
+    src(FILEPATH.src.scss, '!' + '.src/scss/_lib/*')
     .pipe(debug({
       title: 'SCSS Compile =>'
     }))
@@ -92,14 +92,14 @@ const styles = () => {
     }))
     // expanded, nested, compact, compressed
     // .pipe(sass({outputStyle: 'expanded'}))
-    // .pipe(gulp.dest(FILEPATH.dest.css))
+    // .pipe(dest(FILEPATH.dest.css))
     .pipe(sass({outputStyle: 'compressed'}))
     .pipe(sourcemaps.write('./'))
     .pipe(rename({
       suffix: '.min'
     }))
     .pipe(mode.prod(cleanCss()))
-    .pipe(gulp.dest(FILEPATH.dest.css))
+    .pipe(dest(FILEPATH.dest.css))
     .pipe(connect.reload())
     // .pipe(notify('Compile'))
   );
@@ -117,14 +117,14 @@ const compress = [
 // JS Compile
 const scripts = () => {
   return (
-    gulp.src(compress)
+    src(compress)
     // .pipe(plumber())
-    // .pipe(gulp.dest(FILEPATH.dest.js))
+    // .pipe(dest(FILEPATH.dest.js))
     .pipe(uglify())
     .pipe(rename({
       suffix: '.min'
     }))
-    .pipe(gulp.dest(FILEPATH.dest.js))
+    .pipe(dest(FILEPATH.dest.js))
     .pipe(connect.reload())
   );
 };
@@ -132,7 +132,7 @@ const scripts = () => {
 
 const html = () => {
   return (
-    gulp.src('./dest/*.html')
+    src('./dest/*.html')
     .pipe(plumber())
     .pipe(connect.reload())
   );
@@ -144,7 +144,7 @@ const views = () => {
   const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
 
   return (
-    gulp.src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
+    src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
     .pipe(debug({
       title: 'PugCompile =>'
     }))
@@ -154,7 +154,7 @@ const views = () => {
       locals: jsonData,
       pretty: true
     }))
-    .pipe(gulp.dest(FILEPATH.dest.html))
+    .pipe(dest(FILEPATH.dest.html))
     // .pipe(connect.reload())
   );
 };
@@ -172,7 +172,7 @@ const singleviews = (file) => {
   let destPATH = path.dirname(FILEPATH.dest.html + '/' + targetFILE);
 
   return (
-    gulp.src(file)
+    src(file)
     .pipe(debug({
       title: 'PugCompile =>',
       showCount: false
@@ -187,7 +187,7 @@ const singleviews = (file) => {
       locals: jsonData,
       pretty: true
     }))
-    .pipe(gulp.dest(destPATH))
+    .pipe(dest(destPATH))
     .pipe(notify('Compile'))
   );
 };
@@ -196,18 +196,18 @@ const singleviews = (file) => {
 // webpack
 const bundleJs = () => {
   return webpackStream(webpackConfig, webpack)
-  .pipe(gulp.dest(FILEPATH.dest.js));
+  .pipe(dest(FILEPATH.dest.js));
 };
 
 // Image Comporess
 const images = done => {
-    gulp.src('./src/img/**/*', {since : gulp.lastRun(images)})
+    src('./src/img/**/*', {since : lastRun(images)})
     .pipe(mode.prod(imagemin([
       imagemin.optipng(),
       imagemin.gifsicle()
       ]
     )))
-    .pipe(gulp.dest(FILEPATH.dest.img));
+    .pipe(dest(FILEPATH.dest.img));
     done();
 };
 
@@ -216,15 +216,15 @@ const copy = done => {
   destflag = fs.existsSync('./dest/favicon.ico');
 
   if(flag && !destflag) {
-    gulp.src('./src/favicon.ico')
-    .pipe(gulp.dest('./dest/'));
+    src('./src/favicon.ico')
+    .pipe(dest('./dest/'));
   }
   done();
 };
 
 // CSS 外部ライブラリ 結合
 const concatCss = done => {
-  gulp.src([
+  src([
     './src/scss/_lib/_slick-theme.scss',
     './src/scss/_lib/_slick.scss',
     './src/scss/_lib/_animsition.css',
@@ -234,34 +234,34 @@ const concatCss = done => {
     suffix: '.min'
   }))
   .pipe(cleanCss())
-  .pipe(gulp.dest(FILEPATH.dest.css));
+  .pipe(dest(FILEPATH.dest.css));
   done();
 };
 
 // JS 外部ライブラリ 結合
 const concatJs = done => {
-  gulp.src([
+  src([
     './src/js/_lib/slick.min.js',
-    // './src/js/_lib/gsap.min.js',
-    // './src/js/_lib/ofi.min.js',
-    // './src/js/_lib/animsition.min.js',
+    './src/js/_lib/gsap.min.js',
+    './src/js/_lib/ofi.min.js',
+    './src/js/_lib/animsition.min.js',
  ])
   .pipe(concat('lib.js'))
-  .pipe(gulp.dest(FILEPATH.dest.js));
+  .pipe(dest(FILEPATH.dest.js));
   done();
 };
 
 
-// gulp.watch(TargetFILE, Function)
+// watch(TargetFILE, Function)
 const watchTask = done => {
-  gulp.watch('*.html', html);
-  gulp.watch(FILEPATH.src.scss, gulp.series(styles, browserReload));
-  // gulp.watch(FILEPATH.src.js, scripts);
+  watch('*.html', html);
+  watch(FILEPATH.src.scss, series(styles, browserReload));
+  // watch(FILEPATH.src.js, scripts);
 
-  gulp.watch(FILEPATH.src.img, gulp.series(images, browserReload));
-	gulp.watch(FILEPATH.src.js, gulp.series(bundleJs, browserReload));
+  watch(FILEPATH.src.img, series(images, browserReload));
+	watch(FILEPATH.src.js, series(bundleJs, browserReload));
 
-  let singlePUG = gulp.watch(FILEPATH.src.pug);
+  let singlePUG = watch(FILEPATH.src.pug);
   singlePUG.on('change', (e, stats) => {
     singleviews(e);
   });
@@ -270,12 +270,9 @@ const watchTask = done => {
 
 
 
-const watch = gulp.parallel(watchTask);
-// const watch = gulp.parallel(watchTask, server);
-const build = gulp.series(gulp.parallel(styles, html, views, images, scripts, bundleJs, concatCss, concatJs));
-// const build = gulp.series(gulp.parallel(styles));
+const build = series(parallel(styles, html, views, images, scripts, bundleJs, concatCss, concatJs));
 
-// exports.images = images;
+exports.images = images;
 exports.styles = styles;
 exports.scripts = scripts;
 exports.bundleJs = bundleJs;
@@ -285,7 +282,7 @@ exports.copy = copy;
 exports.concatCss = concatCss;
 exports.watch = watch;
 exports.build = build;
-exports.default = gulp.parallel(buildServer, watchTask);
+exports.default = parallel(buildServer, watchTask);
 
 
 const main = () => {
