@@ -290,11 +290,3 @@ exports.copyFonts = copyFonts;
 exports.watch = watch;
 exports.build = build;
 exports.default = parallel(buildServer, watchTask);
-
-
-const main = () => {
-  console.log('call is main');
-
-  return true;
-};
-// main();
