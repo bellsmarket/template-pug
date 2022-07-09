@@ -70,6 +70,58 @@ const browserReload = done => {
 };
 
 
+// All Pug Files => html Compile
+const views = () => {
+  const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
+
+  return (
+    src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
+    // src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
+    .pipe(debug({
+      title: 'PugCompile =>'
+    }))
+    .pipe(changed(FILEPATH.dest.html))
+    // .pipe(plumber())
+    .pipe(pug({
+      locals: jsonData,
+      pretty: true
+    }))
+    .pipe(dest(FILEPATH.dest.html))
+    // .pipe(connect.reload())
+  );
+};
+
+
+// 更新があったファイルのみをコンパイル
+// Pug => html
+const singleviews = (file) => {
+  const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
+
+  let expectPATH = 'src/pug/pages/';
+
+  let targetFILE = file.replace(expectPATH, '');
+  let destPATH = path.dirname(FILEPATH.dest.html + '/' + targetFILE);
+
+  return (
+    src(file)
+    .pipe(debug({
+      title: 'PugCompile =>',
+      showCount: false
+    }))
+    .pipe(plumber({
+      errorHandler: notify.onError({
+        title: 'Pug Compile Failed', // Any message
+        message: '<%= error.message %>' // show Error message
+      })
+    }))
+    .pipe(pug({
+      locals: jsonData,
+      pretty: true
+    }))
+    .pipe(dest(destPATH))
+    // .pipe(notify('Compile'))
+  );
+};
 
 //scss Compile
 const styles = () => {
@@ -105,7 +157,6 @@ const styles = () => {
   );
 };
 
-
 const compress = [
   './src/js/jquery.js',
   './src/js/bootstrap.bundle.js',
@@ -130,96 +181,11 @@ const scripts = () => {
 };
 
 
-const html = () => {
-  return (
-    src('./dest/*.html')
-    .pipe(plumber())
-    .pipe(connect.reload())
-  );
-};
-
-
-// All Pug Files => html Compile
-const views = () => {
-  const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
-
-  return (
-    src(FILEPATH.src.pug, '!' + './src/pug/**/_*.pug')
-    .pipe(debug({
-      title: 'PugCompile =>'
-    }))
-    .pipe(changed(FILEPATH.dest.html))
-    // .pipe(plumber())
-    .pipe(pug({
-      locals: jsonData,
-      pretty: true
-    }))
-    .pipe(dest(FILEPATH.dest.html))
-    // .pipe(connect.reload())
-  );
-};
-
-
-
-// 更新があったファイルのみをコンパイル
-// Pug => html
-const singleviews = (file) => {
-  const jsonData = JSON.parse(fs.readFileSync(FILEPATH.data.json));
-
-  let expectPATH = 'src/pug/pages/';
-
-  let targetFILE = file.replace(expectPATH, '');
-  let destPATH = path.dirname(FILEPATH.dest.html + '/' + targetFILE);
-
-  return (
-    src(file)
-    .pipe(debug({
-      title: 'PugCompile =>',
-      showCount: false
-    }))
-    .pipe(plumber({
-      errorHandler: notify.onError({
-        title: 'Pug Compile Failed', // Any message
-        message: '<%= error.message %>' // show Error message
-      })
-    }))
-    .pipe(pug({
-      locals: jsonData,
-      pretty: true
-    }))
-    .pipe(dest(destPATH))
-    .pipe(notify('Compile'))
-  );
-};
-
 
 // webpack
 const bundleJs = () => {
   return webpackStream(webpackConfig, webpack)
   .pipe(dest(FILEPATH.dest.js));
-};
-
-// Image Comporess
-const images = done => {
-    src('./src/img/**/*', {since : lastRun(images)})
-    .pipe(mode.prod(imagemin([
-      imagemin.optipng(),
-      imagemin.gifsicle()
-      ]
-    )))
-    .pipe(dest(FILEPATH.dest.img));
-    done();
-};
-
-const copy = done => {
-  flag = fs.existsSync('./src/favicon.ico');
-  destflag = fs.existsSync('./dest/favicon.ico');
-
-  if(flag && !destflag) {
-    src('./src/favicon.ico')
-    .pipe(dest('./dest/'));
-  }
-  done();
 };
 
 // CSS 外部ライブラリ 結合
@@ -237,11 +203,10 @@ const concatCss = done => {
   .pipe(dest(FILEPATH.dest.css));
   done();
 };
-
 // JS 外部ライブラリ 結合
 const concatJs = done => {
   src([
-    './src/js/_lib/slick.min.js',
+    './src/js/_lib/slick.js',
     './src/js/_lib/gsap.min.js',
     './src/js/_lib/ofi.min.js',
     './src/js/_lib/animsition.min.js',
@@ -251,15 +216,44 @@ const concatJs = done => {
   done();
 };
 
+// Image Comporess
+const images = done => {
+    src('./src/img/**/*', {since : lastRun(images)})
+    .pipe(mode.prod(imagemin([
+      imagemin.optipng(),
+      imagemin.gifsicle()
+      ]
+    )))
+    .pipe(dest(FILEPATH.dest.img));
+    done();
+};
+const copyFavicon = done => {
+  flag = fs.existsSync('./src/favicon.ico');
+  destflag = fs.existsSync('./dest/favicon.ico');
+
+  if(flag && !destflag) {
+    src('./src/favicon.ico')
+    .pipe(dest('./dest/'));
+  }
+
+  src('./src/fonts/*').pipe(dest('./dest/assets/fonts/'));
+  done();
+};
+const copyFonts = done => {
+  fonts = './src/fonts/*';
+  src(fonts).pipe(dest('./dest/assets/fonts/'));
+  done();
+};
+
+
 
 // watch(TargetFILE, Function)
 const watchTask = done => {
   watch('*.html', html);
   watch(FILEPATH.src.scss, series(styles, browserReload));
-  // watch(FILEPATH.src.js, scripts);
-
   watch(FILEPATH.src.img, series(images, browserReload));
 	watch(FILEPATH.src.js, series(bundleJs, browserReload));
+	// watch(FILEPATH.src.pug, series(singleviews, browserReload));
 
   let singlePUG = watch(FILEPATH.src.pug);
   singlePUG.on('change', (e, stats) => {
@@ -269,17 +263,30 @@ const watchTask = done => {
 };
 
 
+const build = series(parallel(styles,
+  views,
+  images,
+  scripts,
+  bundleJs,
+  concatCss,
+  concatJs,
+  copyFavicon,
+  copyFonts
+));
 
-const build = series(parallel(styles, html, views, images, scripts, bundleJs, concatCss, concatJs));
-
-exports.images = images;
+exports.views = views;
 exports.styles = styles;
 exports.scripts = scripts;
+
 exports.bundleJs = bundleJs;
-exports.html = html;
-exports.views = views;
-exports.copy = copy;
 exports.concatCss = concatCss;
+exports.concatJs = concatJs;
+
+exports.images = images;
+exports.copyFavicon = copyFavicon;
+exports.copyFonts = copyFonts;
+
+
 exports.watch = watch;
 exports.build = build;
 exports.default = parallel(buildServer, watchTask);
